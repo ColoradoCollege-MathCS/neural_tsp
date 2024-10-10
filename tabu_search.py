@@ -43,6 +43,7 @@ def alter(path):
 
 def tabu_search(mat, max_iters, tabu_list_size, initial):
     bestpath = initial
+    perm_list = []
     bestfit = fitness(mat, bestpath)
     tabu_list = []
     for i in range(max_iters):
@@ -50,14 +51,12 @@ def tabu_search(mat, max_iters, tabu_list_size, initial):
         for newpath in altered:
             newfit = fitness(mat, newpath)
             #check if path is in tabulist
-            if newpath in tabu_list:
+            if newpath in tabu_list or newpath in perm_list:
                 continue
             else:
                 # bad path is found
                 if newfit == 0:
-                    if len(tabu_list) >= tabu_list_size:
-                        tabu_list.pop(0)
-                    tabu_list.append(newpath)
+                    perm_list.append(newpath)
                     continue
                 # need to tune accept condition
                 elif newfit <= bestfit * 1.01:
