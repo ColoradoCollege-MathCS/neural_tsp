@@ -1,8 +1,21 @@
 # path = [city1, city3, city4, city2, city1]
 # citylist = [city1, city2, city3, city4]
+import torch
+import numpy as np
 
+path = ['city1', 'city3', 'city4', 'city2']
+citylist = ['city1', 'city2', 'city3', 'city4']
 
-citylist = []
+arr = [
+    [0,2,3,0],
+    [2,0,4,1],
+    [3,4,0,2],
+    [0,1,2,0]
+    ]
+
+np.array(arr)
+torch.Tensor(arr)
+
 # finds fitness of path
 def fitness(mat, path):
     sum = 0
@@ -19,13 +32,12 @@ def fitness(mat, path):
 # creates list of paths 1 swap away from current path
 def alter(path):
     alteredlist = []
-
+    print("original path: ",path)
     for i in range(len(path)-1):
         for j in range(i+1, len(path)):
-            alteredpath = path
-            temp = alteredpath[i]
-            alteredpath[i] = alteredpath[j]
-            alteredpath[j] = temp
+            alteredpath = path.copy()
+            alteredpath[i], alteredpath[j] = alteredpath[j],alteredpath[i]
+            alteredlist.append(alteredpath)
     return alteredlist
 
 def tabu_search(mat, max_iters, tabu_list_size, initial):
@@ -57,3 +69,5 @@ def tabu_search(mat, max_iters, tabu_list_size, initial):
                     tabu_list.append(newpath)
                     continue
     return bestpath.append(bestpath[0])
+
+print(alter(path))
