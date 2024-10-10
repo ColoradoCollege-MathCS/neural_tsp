@@ -3,14 +3,14 @@
 import torch
 import numpy as np
 
-path = ['city1', 'city3', 'city4', 'city2']
+path = ['city1', 'city2', 'city3', 'city4']
 citylist = ['city1', 'city2', 'city3', 'city4']
 
 arr = [
-    [0,2,3,0],
+    [0,2,3,6],
     [2,0,4,1],
     [3,4,0,2],
-    [0,1,2,0]
+    [6,1,2,0]
     ]
 
 np.array(arr)
@@ -19,10 +19,11 @@ torch.Tensor(arr)
 # finds fitness of path
 def fitness(mat, path):
     sum = 0
-    path.append(path[0])
-    for i in range(len(path)-1):
-        start = citylist.index(path[i])
-        end = citylist.index(path[i+1])
+    newpath = path.copy()
+    newpath.append(path[0])
+    for i in range(len(newpath)-1):
+        start = citylist.index(newpath[i])
+        end = citylist.index(newpath[i+1])
         if mat[start][end] == 0:
             return 0
         else:
@@ -32,7 +33,7 @@ def fitness(mat, path):
 # creates list of paths 1 swap away from current path
 def alter(path):
     alteredlist = []
-    print("original path: ",path)
+    # print("original path: ",path)
     for i in range(len(path)-1):
         for j in range(i+1, len(path)):
             alteredpath = path.copy()
@@ -55,7 +56,7 @@ def tabu_search(mat, max_iters, tabu_list_size, initial):
                 # bad path is found
                 if newfit == 0:
                     if len(tabu_list) >= tabu_list_size:
-                        tabu_list.remove(0)
+                        tabu_list.pop(0)
                     tabu_list.append(newpath)
                     continue
                 # need to tune accept condition
@@ -65,9 +66,10 @@ def tabu_search(mat, max_iters, tabu_list_size, initial):
                 # worse path is found
                 else:
                     if len(tabu_list) >= tabu_list_size:
-                        tabu_list.remove(0)
+                        tabu_list.pop(0)
                     tabu_list.append(newpath)
                     continue
-    return bestpath.append(bestpath[0])
+    bestpath.append(bestpath[0])
+    return bestpath
 
-print(alter(path))
+tabu_search(arr, 1, 6, path)
